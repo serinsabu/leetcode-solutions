@@ -1,23 +1,24 @@
 class Solution {
     func merge(_ intervals: [[Int]]) -> [[Int]] {
         guard !intervals.isEmpty else { return [] }
-        let sorted = intervals.sorted{$0[0] < $1[0]}
-        var result:[[Int]] = [sorted[0]]//sorted[0]=>[s1,e1]
+        var sorted = intervals.sorted{$0[0] < $1[0] }//sort by start time
+        var ans = [sorted[0]]
 
         for i in 1..<sorted.count {
-            let curr = sorted[i]//start=>[s2,e2]
-            var last = result.removeLast()//sorted[0]=>(s1,e1)
+            var prev = ans.removeLast()//[s1,e1]
+            var curr = sorted[i]//[s2,e2]
 
-            if curr[0] <= last[1] {
-                // overlap -> merge
-                last[1] = max(last[1], curr[1])
-                result.append(last)//[1,6]
+            //overlapping
+            if curr[0] <= prev[1] {
+                // update e1
+                prev[1] = max(curr[1], prev[1])
+                ans.append(prev)
             } else {
-                // non overlap -> push the updated start and end you got during overlap
-                result.append(last)// removed and pushed again [1,6], [8,10]
-                result.append(curr)// [8,10], [15,18]
+                // non overlapping -> merge
+                ans.append(prev)
+                ans.append(curr)
             }
         }
-        return result
+        return ans
     }
 }
