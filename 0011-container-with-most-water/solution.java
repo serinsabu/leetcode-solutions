@@ -1,26 +1,21 @@
 class Solution {
     public int maxArea(int[] height) {
-        // keep moving the shorter one so that height can still increase but not decrease
-        // DO NOT MOVE taller one because width will decrease and water also will be short
-        // start with left and right
-        // calculate water
-        // move the smaller one 
-
         int n = height.length;
         int i=0;
         int j=n-1;
-        int maxWidth = Integer.MIN_VALUE;
+        int maxArea = Integer.MIN_VALUE;
+        int area = 0;
 
-        while(i < j) {
-            // water = distance * shorter height
-            int area = (j-i) * Math.min(height[i], height[j]);
-            if(height[i] < height[j]) {
-                i++;
+        while(i < j) { 
+            if(height[i] <= height[j]) {
+                area = (j-i) * height[i];//7
+                i++;//2
             } else {
-                j--;
+                area = (j-i) * height[j];
+                j--;//
             }
-            maxWidth = Math.max(area, maxWidth);
+            maxArea = Math.max(maxArea, area);//49
         }
-        return maxWidth;
+        return maxArea;
     }
 }
