@@ -4,12 +4,13 @@ class Solution {
         var high = nums.count-1
 
         while low < high {
-            var mid = low+(high-low)/2
+            var mid = (low+high)/2
+            // check in left rotated sorted array 
             if nums[mid] > nums[high] {
                 // go right
                 low = mid+1
-            } else if nums[mid] <= nums[high] {
-                // go left
+            } else {
+                //left
                 high = mid
             }
         }
