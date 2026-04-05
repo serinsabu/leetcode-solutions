@@ -11,14 +11,14 @@ class Solution {
             dict[nums[j], default:0] += 1
             
             while dict[maxElt, default:0] >= k {
+                // atleast >= k, always 0 to i subarrays are valid
+                count += n-j
                 dict[nums[i]]! -= 1
                 if dict[nums[i]] == 0 {
                     dict.removeValue(forKey: nums[i])
                 } 
                 i += 1
             }
-            // atleast >= k, always 0 to i subarrays are valid
-            count += i
             j += 1
         }
         return count
