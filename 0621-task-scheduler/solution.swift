@@ -1,42 +1,38 @@
 class Solution {
     func leastInterval(_ tasks: [Character], _ n: Int) -> Int {
-        // Pick task with max frequency
-        var dict = [Character: Int]()
+        var maxTasks = [Character: Int]()
         var maxHeap = MaxHeap()
-        // Minimize total time
-        var tasks = tasks
+        for i in tasks {
+            maxTasks[i, default: 0] += 1
+        }
+
+        for freq in maxTasks {
+            maxHeap.push(freq.value)
+        }
         var time = 0
-        var n = n
         var cooldown = [(count: Int, time: Int)]()
 
-        for i in 0..<tasks.count {
-            // Count frequency of tasks
-            dict[tasks[i], default: 0] += 1
-        }
-
-        // Put all tasks frequency count into max heap
-        for (_, count) in dict {
-            maxHeap.push(count)
-        }
-
         while !maxHeap.isEmpty || !cooldown.isEmpty {
-            time += 1
+            time += 1   
 
-            // 1. Move ready tasks first
-            if !cooldown.isEmpty && cooldown[0].time == time {
-                maxHeap.push(cooldown.removeFirst().count)
+            // cooldown has the remaining time and count
+            // process all the tasks
+            if !cooldown.isEmpty {
+                //Is there a task in the cooldown queue whose available_time is equal to the current time?
+                var remTime = cooldown[0].time
+                // If yes, pop it from the queue and push it back into the Max-Heap.
+                if remTime == time {
+                    // push the remaining count
+                    maxHeap.push(cooldown.removeFirst().count)
+                }
             }
 
-            // 2. Run task
+            // run task
             if !maxHeap.isEmpty {
-                // pick most frequent task
                 var count = maxHeap.pop()!
-                // decrease its count
                 count -= 1
-
-                // if still remaining:
                 if count > 0 {
-                    cooldown.append((count, time + n + 1))
+                    cooldown.append((count, n + 1 + time))
                 }
             }
         }
@@ -108,5 +104,3 @@ struct MaxHeap {
                 }
             }
         }
-
-
