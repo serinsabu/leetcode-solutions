@@ -1,19 +1,19 @@
 class Solution {
     func findMin(_ nums: [Int]) -> Int {
+        // idea is sorted array is always found in one half
+        // the rotation point will have the sorted part
+        var n = nums.count
         var low = 0
-        var high = nums.count-1
+        var high = n-1
 
         while low < high {
             var mid = (low+high)/2
-            // check in left rotated sorted array 
             if nums[mid] > nums[high] {
-                // go right
-                low = mid+1
+                low = mid + 1 
             } else {
-                //left
                 high = mid
             }
         }
-        return nums[high]
+        return nums[low]
     }
 }
