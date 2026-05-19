@@ -1,34 +1,30 @@
 class Solution {
     func merge(_ intervals: [[Int]]) -> [[Int]] {
-        var ans = [[Int]]()
-        // sort intervals by start time 
-        let sorted = intervals.sorted {$0[0] < $1[0]}
-        var s1 = sorted[0][0]
-        var e1 = sorted[0][1]
-        for interval in 1..<sorted.count {
-            var s2 = sorted[interval][0]
-            var e2 = sorted[interval][1]
+        // sort by start time
+        var sorted = intervals.sorted { $0[0] < $1[0] }
+        var s1 = sorted[0][0]//1,8
+        var e1 = sorted[0][1]//3,10
 
-            // overlapping -> When intervals overlap, you should extend the end, not change start.
-            /*
-            if overlapping
-                extend end
-            else
-                store previous interval
-                start new interval
-            */
-            if s2 <= e1 {
-                // update
-                e1 = max(e1, e2)
-            } else {
-                // merge overlapped intervals during non overlap
-                ans.append([s1, e1])
-                s1 = s2
-                e1 = e2
+        var ans = [[Int]]()
+
+        //case 1 - overlapping
+        for interval in sorted {
+            var s2 = interval[0]//15
+            var e2 = interval[1]//18
+
+            //3 >= 2 - overlapping
+            //3 >= 8 -no
+            //10 >= 15 -no
+            //update end
+            if e1 >= s2 {
+                e1 = max(e1, e2)//6
+            } else {//append when non overlapping
+                ans.append([s1,e1])//[[1,6],[8,10]]
+                s1 = s2//15
+                e1 = e2//18
             }
         }
-        // merge last interval
-        ans.append([s1, e1])
-        return ans
+        ans.append([s1,e1])//[[1,6],[8,10],[15,18]]
+    return ans
     }
 }
