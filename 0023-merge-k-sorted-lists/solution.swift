@@ -22,43 +22,18 @@ class Solution {
         var interval = 1
         var n = lists.count
         var lists = lists
-
-        // Continue until we have merged everything into one list
+        
+        //moving interval each time
         while interval < n {
-            // Start from the first list
             var i = 0
-            // Ensure the pair exists:
-            // lists[i] and lists[i + interval]
             while i + interval < n {
-            // Merge the two sorted linked lists
-            // Store the merged result back into the first position
-            //
-            // interval = 1:
-            // lists[0] = merge(L1, L2)
-            // lists[2] = merge(L3, L4)
-            //
-            // interval = 2:
-            // lists[0] = merge(L1+L2, L3+L4)
-
-            // I DID NOT ASSIGN BACK to LIST[i] -> FAILED -> [[],[1]] o/p-[], expected-[1]
+                //i=0 => merge(l1,l2)
+                //i=2 =>merge(l3,l4)
                 lists[i] = mergeTwoLists(lists[i], lists[i+interval])
-                // Move to the next pair
-                //
-                // interval = 1:
-                // 0 → 2 → 4 ...
-                //
-                // interval = 2:
-                // 0 → 4 → 8 ...
+                // 0+2=2
                 i += interval * 2
             }
-            // Double interval size
-            //
-            // 1 → 2 → 4 → 8 ...
-            //
-            // Similar to Merge Sort:
-            // First merge groups of size 1,
-            // then groups of size 2,
-            // then groups of size 4, etc.
+            // interval = 1*2 = 2
             interval *= 2
         }
         return lists[0]
