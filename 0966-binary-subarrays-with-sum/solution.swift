@@ -2,24 +2,31 @@ class Solution {
     func numSubarraysWithSum(_ nums: [Int], _ goal: Int) -> Int {
         var n = nums.count
 
-        func atmost(_ k: Int) -> Int {
-            if k < 0 { return 0 } // crashes, if it is not given when goal = 0
+        //subarrays with sum ≤ goal-subarrays with sum ≤ goal-1
+        func subarraysWithSum(_ k: Int) -> Int {
             var i=0
             var j=0
-            var sum = 0
+            var sum=0
             var count = 0
+
+            if k < 0 {
+                return 0
+            }
+
             while j < n {
-                sum += nums[j]//3
-                // this pattern is subarray sum <= k
+                sum += nums[j]//2
                 while sum > k {
                     sum -= nums[i]
                     i += 1
                 }
-                count += j-i+1//2
-                j += 1//4
+                if sum <= k {
+                    count += j-i+1
+                }
+                j += 1//2
             }
             return count
         }
-        return atmost(goal) - atmost(goal-1)
+
+        return subarraysWithSum(goal) - subarraysWithSum(goal-1)
     }
 }
