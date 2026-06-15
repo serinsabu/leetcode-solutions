@@ -10,39 +10,28 @@
  */
 class Solution {
     func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
-        guard !lists.isEmpty else { return nil }
-        // Start by merging 1 list with its adjacent list.
-        // Example:
-        // [L1, L2, L3, L4]
-        //
-        // interval = 1
-        // Merge:
-        // L1 + L2
-        // L3 + L4
         var interval = 1
         var n = lists.count
         var lists = lists
+
+        guard !lists.isEmpty else {
+            return nil
+        }
         
-        //moving interval each time
         while interval < n {
             var i = 0
             while i + interval < n {
-                //i=0 => merge(l1,l2)
-                //i=2 =>merge(l3,l4)
-                lists[i] = mergeTwoLists(lists[i], lists[i+interval])
-                // 0+2=2
+                lists[i] = mergeSortedList(lists[i], lists[i+interval])
                 i += interval * 2
             }
-            // interval = 1*2 = 2
             interval *= 2
         }
         return lists[0]
     }
 
-    private func mergeTwoLists(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
-        var dummy = ListNode(-1)
+    private func mergeSortedList(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+        var dummy = ListNode(0)
         var temp = dummy
-
         var l1 = list1
         var l2 = list2
 
@@ -57,14 +46,13 @@ class Solution {
                 l2 = l2?.next
             }
         }
-
-        while l1 != nil {
+        
+        while(l1 != nil) {
             temp.next = l1
             temp = temp.next!
             l1 = l1?.next
         }
-
-        while l2 != nil {
+        while(l2 != nil) {
             temp.next = l2
             temp = temp.next!
             l2 = l2?.next
