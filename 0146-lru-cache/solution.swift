@@ -11,11 +11,10 @@ class Node {
 }
 
 class LRUCache {
-
+    var head = Node(0,0)
+    var tail = Node(0,0)
     var map = [Int: Node]()
-    let head = Node(0, 0)
-    let tail = Node(0, 0)
-    let capacity: Int
+    var capacity = 0
 
     init(_ capacity: Int) {
         head.next = tail
@@ -23,61 +22,64 @@ class LRUCache {
         self.capacity = capacity
     }
 
-    // remove middle node
-    // Before: A <--> B <--> C
-    // After: A <--> C
-    func remove(_ node: Node) {
-        node.prev?.next = node.next
-        node.next?.prev = node.prev
+    //A<->B<->C => remove middle
+    private func remove(_ node: Node) {
+        var temp = node.prev!
+
+        temp.next = node.next
+        node.next?.prev = temp
     }
 
-    // insert node at tail
-    // Before: A --> tail
-    // After: A --> B --> tail
-    func insert(_ node: Node) {
-        let prev = tail.prev
+    // insert at tail A<->B<->node<->tail
+    private func insert(_ node: Node) {
+        var prev = tail.prev!
 
-        prev?.next = node
+        prev.next = node
         node.prev = prev
 
         node.next = tail
         tail.prev = node
     }
+
+    // Cache:
+    // head <-> A <-> B <-> C <-> tail
+    // A = Least Recently Used
+    // C = Most Recently Used
+
+    // So after get(B):
+    // head <-> A <-> C <-> B <-> tail
     
     func get(_ key: Int) -> Int {
-        // Find node.
-        guard let node = map[key] else {
+        guard let currNode = map[key] else {
             return -1
         }
-        // Move to tail.
-        // remove + insert
-        remove(node)
-        insert(node)
-        return node.value
+        remove(currNode)
+        insert(currNode)
+        return currNode.value
     }
     
     func put(_ key: Int, _ value: Int) {
-        // PUT Existing Key
         if let node = map[key] {
-            node.value = value
-            // remove + insert
+            // if exists - update value (1,100)
             remove(node)
             insert(node)
+            node.value = value
         } else {
-            // PUT New Key
-            //Create node.
-            let newNode = Node(key, value)
-            // insert
+            // if key does not exist (1,10) , (2,20)
+            // Create Node(1,10)
+            // Insert at tail (MRU)
+            // Add to map
+            var newNode = Node(key, value)
             insert(newNode)
-            // Add to map.
             map[key] = newNode
-        }
 
-        // Evict
-        if map.count > capacity {
-            let lru = head.next!
-            remove(lru)
-            map.removeValue(forKey: lru.key)
+            // map count exceeds, EVICT 
+            // Find LRU
+            if map.count > capacity {
+                let lru = head.next!
+                remove(lru)
+                map.removeValue(forKey: lru.key)
+            }
         }
     }
 }
