@@ -1,24 +1,26 @@
 class Solution {
     func numberOfSubstrings(_ s: String) -> Int {
-        var map = [Character: Int]()
-        var chars = Array(s)
+        var n = s.count
         var i=0
         var j=0
-        var n = s.count
-        var count = 0
+        var ans = 0
+        var dict = [Character: Int]()
+        var chars = Array(s)
 
         while j < n {
-            map[chars[j], default: 0] += 1
+            dict[chars[j], default: 0] += 1
 
-            while map["a", default: 0] > 0 && 
-                    map["b", default: 0] > 0 && 
-                    map["c", default: 0] > 0 {
-                map[chars[i]]! -= 1
-                count += n-j
+            while dict["a", default: 0] >= 1 && 
+                dict["b", default: 0] >= 1 && 
+                dict["c", default: 0] >= 1 {
+                // How many substrings START at i?
+                ans += n-j
+                // shrink
+                dict[chars[i]]! -= 1
                 i += 1
             }
             j += 1
         }
-        return count
+        return ans
     }
 }
