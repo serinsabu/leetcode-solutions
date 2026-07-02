@@ -1,23 +1,19 @@
 class Solution {
     func maxScore(_ cardPoints: [Int], _ k: Int) -> Int {
-        var n=cardPoints.count
-        var windowSum = 0
-        // get sum of first k curr window
+        var currSum = 0
+        var n = cardPoints.count
+
+        // sum of first k elements
         for i in 0..<k {
-            windowSum += cardPoints[i]//6
+            currSum += cardPoints[i]
         }
-        var maxSum = windowSum
-        //0<3,1<3,2<3
-        //k=3, i=0
-        //k=4, i=1
-        //k=5, i=2
+
+        var maxSum = currSum
         for i in 0..<k {
-            // remove from left and add from right
-            // cardPoints[k-1-i] => 3-1-0=2, 3-1-1=1, 3-1-2=0
-            // cardPoints[n-1-i] => 7-1-0=6, 7-1-1=5, 7-1-2=4
-            windowSum = windowSum - cardPoints[k-1-i] + cardPoints[n-1-i]
-            //6-3+1=4, 4-2+6=8, 8-1+5=12
-            maxSum = max(maxSum, windowSum)
+            // remove leftsum 
+            // add right sum
+            currSum = currSum - cardPoints[k-i-1] + cardPoints[n-i-1]
+            maxSum = max(maxSum, currSum)
         }
         return maxSum
     }
