@@ -1,27 +1,26 @@
 class Solution {
     func longestOnes(_ nums: [Int], _ k: Int) -> Int {
-        //zeroes <= k -> valid window
-        var n = nums.count
-        var zeros = 0
+        var n=nums.count
         var i=0
         var j=0
-        var maxOnes = 0
+        var numOfZeros = 0
+        var maxLength = 0
 
         while j < n {
             if nums[j] == 0 {
-                zeros += 1//3
+                numOfZeros += 1//
             }
-
             // invalid
-            while zeros > k { // invalid -> shrink
+            while numOfZeros > k {
                 if nums[i] == 0 {
-                    zeros -= 1
+                    numOfZeros -= 1//2
                 }
-                i += 1//1
+                // shrink
+                i += 1//5
             }
-            maxOnes = max(maxOnes, j-i+1)//5
-            j += 1//6
+            maxLength = max(maxLength, j-i+1)//6
+            j += 1
         }
-        return maxOnes 
+    return maxLength
     }
 }
