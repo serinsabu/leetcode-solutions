@@ -3,19 +3,20 @@ class Solution {
         var n = nums.count
         var i=0
         var j=0
-        var sum = 0
-        var minLen = Int.max
+        var minLength = Int.max
+        var currSum = 0
 
-        while(j < n) {
-            sum += nums[j]
+        while j < n {
+            currSum += nums[j]//2
 
-            while(sum >= target) {
-                minLen = min(minLen, j-i+1)
-                sum -= nums[i]
+            // invalid
+            while currSum >= target {
+                minLength = min(minLength, j-i+1)
+                currSum -= nums[i]
                 i += 1
             }
-            j += 1 
+            j += 1
         }
-        return minLen == Int.max ? 0 : minLen
+        return minLength == Int.max ? 0 : minLength
     }
 }
