@@ -1,23 +1,22 @@
 class Solution {
     func lengthOfLongestSubstring(_ s: String) -> Int {
-        var map = [Character: Int]()
+        var n = s.count
         var i=0
         var j=0
-        var n=s.count
+        var exists = Set<Character>()
         var chars = Array(s)
-        var ans = 0
+        var maxLength = 0
 
         while j < n {
-            map[chars[j], default: 0] += 1 //a-1,b-1,c-1
-            
-            // Shrink the window from the left until the duplicate is removed.
-            while map[chars[j], default: 0] > 1 {
-                map[chars[i], default: 0] -= 1
+            // invalid
+            while exists.contains(chars[j]) {
+                exists.remove(chars[i])
                 i += 1
             }
-            ans = max(ans, j-i+1)//3
-            j += 1   
+            exists.insert(chars[j])//ab
+            maxLength = max(maxLength, j-i+1)//1
+            j += 1
         }
-        return ans
+        return maxLength
     }
 }
