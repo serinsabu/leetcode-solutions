@@ -14,13 +14,23 @@
  * }
  */
 class Solution {
-    func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
-        guard let p = p, let q = q else {
-            return p == nil && q == nil
-        }
-        if p.val != q.val {
+    func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {  
+        return solve(p, q) 
+    }
+
+    func solve(_ node1: TreeNode?, _ node2: TreeNode?) -> Bool {
+        // Base Case
+        if node1 == nil && node2 == nil {
+            return true
+        } 
+        if node1 == nil && node2 != nil {
             return false
         }
-        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+        // Ask Left Child
+        let left = solve(node1?.left, node2?.left)
+        // Ask Right Child
+        let right = solve(node1?.right, node2?.right)
+        // Combine Left + Right + Current Node
+        return left && right && node1?.val == node2?.val
     }
 }
