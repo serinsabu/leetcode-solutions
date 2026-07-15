@@ -1,15 +1,11 @@
 class Solution {
     func majorityElement(_ nums: [Int]) -> Int {
-        // 3 cases
-        //if count == 0,no vote, so set count=1, start with a new candidate
-        //else if candidate == nums[i], inc count
-        // else dec count
-        var candidate = nums[0];
-        var count = 1;
         var n = nums.count
+        var count = 1
+        var candidate = nums[0]
 
-        for i in 1..<n {
-            if candidate == nums[i] {
+        for i in 1..<nums.count {
+            if nums[i] == candidate {
                 count += 1
             } else {
                 count -= 1
