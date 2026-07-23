@@ -1,38 +1,45 @@
 class Solution {
     func numIslands(_ grid: [[Character]]) -> Int {
-        var m = grid.count//rows
-        var n = grid[0].count//columns
+        var m = grid.count
+        var n = grid[0].count
         var grid = grid
         var count = 0
+        //info p list
+        //uidesign requires compatibility - false - glass
+        //true - old design
 
-        // if the grid[i][j] == '1' then start dfs from there
-        // if dfs is done for one island then increase count
         for i in 0..<m {
             for j in 0..<n {
                 if grid[i][j] == "1" {
-                    dfs(i, j)
+                    dfs(i,j)
                     count += 1
                 }
             }
         }
 
-        func dfs(_ r: Int, _ c: Int) {
-            // mark it visited
-            grid[r][c] = "0"
+        func dfs(_ row: Int, _ col: Int) {
+            // case 1 - out of bounds , check all 4 sides
+            if row < 0 || row >= m || col < 0 || col >= n {
+                return
+            }
 
-            //4 directions
-            let dirs = [(0,1), (1,0), (-1,0), (0,-1)]
+            // case 2 - if water, skip
+            if grid[row][col] == "0" {
+                return
+            }
 
-            for (dx,dy) in dirs {
-                let newR = r + dx
-                let newC = c + dy
-                //boundary check
+            // case 3 - if already marked, skip
+            if grid[row][col] != "1" {
+                return
+            }
 
-                guard newR >= 0, newR < m, newC >= 0, newC < n, grid[newR][newC] == "1" else {
-                    continue
-                } 
+            // Mark current cell visited
+            grid[row][col] = "2"
 
-                dfs(newR, newC)
+            // 4 directions
+            var dirs = [(-1,0),(1,0),(0,1),(0,-1)]
+            for (x,y) in dirs {
+                dfs(row + x, col + y)
             }
         }
         return count
