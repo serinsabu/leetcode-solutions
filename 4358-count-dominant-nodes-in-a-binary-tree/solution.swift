@@ -14,30 +14,21 @@
  * }
  */
 class Solution {
-    var ans = 0
     func countDominantNodes(_ root: TreeNode?) -> Int {
-        if root == nil {
-            return 0
-        }
         return dfs(root).count
     }
 
     func dfs(_ node: TreeNode?) -> (maxVal: Int, count: Int) {
+        var count = 0
         guard let node = node else {
             return (Int.min, 0)
         }
-    
         let left = dfs(node.left)
         let right = dfs(node.right)
-    
-        var count = left.count + right.count
-    
-        let maxVal = max(node.val, max(left.maxVal, right.maxVal))
-    
-        if (node.left == nil && node.right == nil) || node.val == maxVal {
+        let subtreeMax = max(node.val, max(left.maxVal,right.maxVal))
+        if node.val == subtreeMax {
             count += 1
         }
-    
-        return (maxVal, count)
+        return (subtreeMax, (left.count + right.count + count))
     }
 }
