@@ -1,15 +1,16 @@
 class Solution {
     func coinChange(_ coins: [Int], _ amount: Int) -> Int {
-        var ans = Array(repeating: Int.max, count: amount+1)
-        ans[0] = 0
+        var n = coins.count
+        var dp = Array(repeating: amount+1, count: amount+1)
+        dp[0] = 0
 
         for i in 0...amount {
             for coin in coins {
-                if i >= coin && ans[i-coin] != Int.max {
-                    ans[i] = min(ans[i], ans[i-coin]+1)
+                if coin <= i {
+                    dp[i] = min(dp[i], 1 + dp[i-coin])
                 }
             }
         }
-        return ans[amount] == Int.max ? -1 : ans[amount]
+        return dp[amount] == amount + 1 ? -1 : dp[amount]
     }
 }
