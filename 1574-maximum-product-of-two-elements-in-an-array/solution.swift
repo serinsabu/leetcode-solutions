@@ -1,17 +1,16 @@
 class Solution {
     func maxProduct(_ nums: [Int]) -> Int {
-        // idea is to take max of 2 largest numbers to get max product
-       var first = 0
-       var second = 0
+        var max1 = 0
+        var max2 = 0
 
-        for i in 0..<nums.count {
-            if nums[i] > first {
-                second = first
-                first = nums[i]
-            } else if nums[i] > second {
-                second = nums[i]
+        for num in nums {
+            if num > max1 {
+                max2 = max1
+                max1 = num
+            } else if num > max2 {
+                max2 = num
             }
         }
-        return (second-1) * (first - 1)
+        return (max1-1) * (max2-1)
     }
 }
