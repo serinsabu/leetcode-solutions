@@ -6,25 +6,22 @@ class Solution {
 
         while low <= high {
             var mid = (low+high)/2
-            if target == nums[mid] {
+            if nums[mid] == target {
                 return mid
             }
-            
             if nums[low] <= nums[mid] {
-                // left half sorted
                 if target >= nums[low] && target < nums[mid] {
                     high = mid-1
                 } else {
                     low = mid+1
                 }
             } else {
-                // right half sorted
                 if target > nums[mid] && target <= nums[high] {
                     low = mid+1
                 } else {
                     high = mid-1
                 }
-            } 
+            }
         }
         return -1
     }
