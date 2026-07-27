@@ -11,75 +11,70 @@ class Node {
 }
 
 class LRUCache {
+    var capacity = 0
     var head = Node(0,0)
     var tail = Node(0,0)
-    var map = [Int: Node]()
-    var capacity = 0
-
+    var dict = [Int: Node]()
     init(_ capacity: Int) {
-        head.next = tail
-        tail.prev = head
         self.capacity = capacity
+
+        tail.prev = head
+        head.next = tail
     }
-
-    //A<->B<->C => remove middle
-    private func remove(_ node: Node) {
-        var temp = node.prev!
-
-        temp.next = node.next
-        node.next?.prev = temp
-    }
-
-    // insert at tail A<->B<->node<->tail
+    // prev<->node
+    // head<->node<->tail
+    // insert node at end
     private func insert(_ node: Node) {
-        var prev = tail.prev!
+        let prev = tail.prev!
 
         prev.next = node
         node.prev = prev
-
         node.next = tail
         tail.prev = node
     }
+    // head<->A<-B->C<->tail
+    // A<->C
+    // remove node B from middle
+    private func remove(_ node: Node) {
+        node.prev?.next = node.next
+        node.next?.prev = node.prev
 
-    // Cache:
-    // head <-> A <-> B <-> C <-> tail
-    // A = Least Recently Used
-    // C = Most Recently Used
-
-    // So after get(B):
-    // head <-> A <-> C <-> B <-> tail
+        node.next = nil
+        node.prev = nil
+    }
     
     func get(_ key: Int) -> Int {
-        guard let currNode = map[key] else {
-            return -1
-        }
-        remove(currNode)
-        insert(currNode)
-        return currNode.value
+        if let node = dict[key] {
+            // Since it was just accessed, make it Most Recently Used.
+            // * Remove it from its current position.
+            // * Insert it before tail.
+            remove(node)
+            insert(node)
+            return node.value
+        } 
+        return -1
     }
     
     func put(_ key: Int, _ value: Int) {
-        if let node = map[key] {
-            // if exists - update value (1,100)
+        // case 1: if exists, find node
+        if let node = dict[key] {
+            // update
+            node.value = value
             remove(node)
             insert(node)
-            node.value = value
-        } else {
-            // if key does not exist (1,10) , (2,20)
-            // Create Node(1,10)
-            // Insert at tail (MRU)
-            // Add to map
-            var newNode = Node(key, value)
+        } else { // Case 2: Key doesn’t exist
+            // create a new node
+            let newNode = Node(key, value) 
+            dict[key] = newNode
             insert(newNode)
-            map[key] = newNode
+        }
 
-            // map count exceeds, EVICT 
-            // Find LRU
-            if map.count > capacity {
-                let lru = head.next!
-                remove(lru)
-                map.removeValue(forKey: lru.key)
-            }
+        // case 3: capacity exceeds , evict
+        if dict.count > capacity {
+            // least recently used key
+            let lru = head.next!
+            remove(lru)
+            dict.removeValue(forKey: lru.key)
         }
     }
 }
