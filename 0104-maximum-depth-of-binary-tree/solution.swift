@@ -15,22 +15,19 @@
  */
 class Solution {
     func maxDepth(_ root: TreeNode?) -> Int {
-        if root == nil {
+        guard let root = root else {
             return 0
         }
         return solve(root)
     }
 
     func solve(_ node: TreeNode?) -> Int {
-        // Base Case
-        if node == nil {
+        guard let node = node else {
             return 0
         }
-        // Ask Left Child
-        let left = solve(node?.left)
-        // Ask Right Child
-        let right = solve(node?.right)
-        // Combine Left + Right + Current Node
-        return max(left,right)+1
+        let left = solve(node.left)
+        let right = solve(node.right)
+        
+        return 1 + max(left,right) 
     }
 }
