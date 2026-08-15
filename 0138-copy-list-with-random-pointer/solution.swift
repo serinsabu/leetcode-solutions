@@ -14,34 +14,29 @@
 
 class Solution {
     func copyRandomList(_ head: Node?) -> Node? {
-        guard let head = head else {
-            return head
+        guard let node = head else {
+            return nil
         }
-
-        var newHead = Node(head.val)
-        var prev = newHead
-        var map: [Node:Node] = [head: newHead]
-
-        var curr = head.next
-        while curr != nil {
-            let newNode = Node(curr!.val)
-            prev.next = newNode
-            map[curr!] = newNode
-
-            prev = newNode
-            curr = curr?.next
-        }
-
-        var oldCurr: Node? = head
-        var newCurr: Node? = newHead
-
-        while oldCurr != nil {
-            if let random = oldCurr?.random {
-                newCurr?.random = map[random]
+        var dict = [Node: Node]()
+        
+        func dfs(_ node: Node?) -> Node? {
+            guard let node = node else {
+                return nil
             }
-            oldCurr = oldCurr?.next
-            newCurr = newCurr?.next
+            // case 1 : if cloned node return right away
+            if let clone = dict[node] {
+                return clone
+            }
+            // case 2: if not cloned, create the cloned node
+            let clonedNode = Node(node.val)
+            // store it right away
+            dict[node] = clonedNode
+
+            // connect next node and random node to cloned next and random
+            clonedNode.next = dfs(node.next)
+            clonedNode.random = dfs(node.random)
+            return clonedNode
         }
-    return newHead
+    return dfs(node)
     }
 }
