@@ -1,78 +1,25 @@
-/*
-“Which existing group becomes free first?”
-[1,5] [2,3] [4,6] [7,8]
-
-1. Process [1,5]
-There are no groups yet.
-So we create the first group, and it is occupied until 5.
-Heap = [5]
-
-Meaning:
-Group 1 is busy until time 5.
-
-2. Process [2,3]
-The earliest any group becomes free is 5.
-But this interval starts at 2: 2 <= 5
-So it overlaps with the interval already in Group 1. We cannot reuse that group.
-Therefore, we need a new group.
-
-Meaning:
-One group is busy until 3, and another is busy until 5.
-So currently we need 2 groups.
-
-3. Process [4,6]
-Look at the smallest end time: 3.
-The new interval starts at 4: 4 > 3
-
-So the group that was occupied until 3 is now free.
-We remove 3: [3,5] → [5]
-
-Then put [4,6] into that same group. That group is now occupied until 6:
-Heap = [5,6]
-We didn’t create a new group. We reused the old group.
-So we still need 2 groups.
-
-4. Process [7,8]
-The earliest group becomes free at 5.
-The new interval starts at 7: 7 > 5
-So that group is free.
-Remove 5 and reuse that group until 8: [5,6] → [6,8]
-Still only 2 groups.
-
-If new start > earliest ending group
-    → that group is free
-    → pop it and reuse it
-Then
-    → push current end
-
-So the heap doesn’t store the intervals. It stores:
-the end time of each currently existing group.
-And the final answer is the maximum number of groups needed — here, 2.
-*/
-
-
 class Solution {
     func minGroups(_ intervals: [[Int]]) -> Int {
-        // sort intervals by start times
-        let sorted = intervals.sorted { $0[0] < $1[0] }
-
-        // Create a Min Heap that stores only end times.
+        // sort by start times
+        let sorted = intervals.sorted { $0[0] < $1[0] } 
         var heap = MinHeap()
-
-        // The heap starts empty because groups are created as we process intervals, not beforehand.
-        for i in 0..<sorted.count {
-            var start = sorted[i][0]//7
+        // [[1, 5], [1, 10], [2, 3], [5, 10], [6, 8]]
+        // Two intervals can be in the same group only if the first one ends before the second one starts.
+        // 1.........5 - gp-1
+        // 1................10 - gp-2
+        // ..2....3 - gp-3
+        // ..........5......10 - gp-3
+        // ............6..8 -gp-1
+        // compare end times
+        for i in 0..<sorted.count  {
+            var start = sorted[i][0]//6
             var end = sorted[i][1]//8
-            // * remove the smallest end time (pop)
-            // * because that group is now free
-            if !heap.isEmpty && start > heap.peek()! {
+            if !heap.isEmpty && heap.peek()! < start {
                 heap.pop()
             }
-            // Then, regardless, insert the current interval’s end time:
-            // Because this interval is now occupying that group until end.
-            heap.push(end)//[6,8]
+            heap.push(end)//[10]
         }
-        return heap.count // because every element in the heap represents one active group.
+        return heap.count
     }
 }
 
