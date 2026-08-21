@@ -10,53 +10,49 @@
  */
 class Solution {
     func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
-        var interval = 1
-        var n = lists.count
-        var lists = lists
-
         guard !lists.isEmpty else {
             return nil
         }
-        
-        while interval < n {
+
+        var lists = lists
+        var merged = lists[0]
+        var interval = 1
+
+        while interval < lists.count {
             var i = 0
-            while i + interval < n {
-                lists[i] = mergeSortedList(lists[i], lists[i+interval])
+            while i + interval < lists.count {
+                lists[i] = mergeTwoLists(lists[i], lists[i+interval])
                 i += interval * 2
             }
             interval *= 2
         }
-        return lists[0]
-    }
-
-    private func mergeSortedList(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
-        var dummy = ListNode(0)
-        var temp = dummy
-        var l1 = list1
-        var l2 = list2
-
-        while l1 != nil && l2 != nil {
-            if l1!.val <= l2!.val {
-                temp.next = l1
-                temp = temp.next!
-                l1 = l1?.next
-            } else {
-                temp.next = l2
-                temp = temp.next!
-                l2 = l2?.next
-            }
-        }
         
-        while(l1 != nil) {
-            temp.next = l1
-            temp = temp.next!
-            l1 = l1?.next
+        func mergeTwoLists(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+            var l1 = list1
+            var l2 = list2
+            var dummy = ListNode(0)
+            var temp = dummy
+
+            while l1 != nil && l2 != nil {
+                if l1!.val <= l2!.val {
+                    let node = ListNode(l1!.val)
+                    dummy.next = node
+                    dummy = dummy.next!
+                    l1 = l1!.next
+                } else {
+                    let node = ListNode(l2!.val)
+                    dummy.next = node
+                    dummy = dummy.next!
+                    l2 = l2!.next
+                }
+            }
+            if l1 != nil {
+                dummy.next = l1
+            } else {
+                dummy.next = l2
+            }
+            return temp.next
         }
-        while(l2 != nil) {
-            temp.next = l2
-            temp = temp.next!
-            l2 = l2?.next
-        }
-        return dummy.next
+        return lists[0]
     }
 }
