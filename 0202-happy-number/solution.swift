@@ -2,24 +2,27 @@ class Solution {
     func isHappy(_ n: Int) -> Bool {
         var slow = n
         var fast = n
-        while fast != 1 {
-            slow = next(slow)
-            fast = next(next(fast))
-            if slow == fast {
-                return slow == 1
-            }
-        }
 
-        func next(_ n: Int) -> Int {
+        // 2 → 4  → 16 s → 37 s → 58 s → 89 f → 145 s → 42 f → 20 s → 4 f
+
+        repeat {
+            slow = sumOfSq(slow)//
+            fast = sumOfSq(sumOfSq(fast))//
+            if fast == 1 {
+                return true
+            }
+        } while slow != fast
+
+        func sumOfSq(_ num: Int) -> Int {
+            var num = num
             var sum = 0
-            var n = n
-            while n > 0 {
-                var rem = n%10
+            while num > 0 {
+                var rem = num%10
                 sum += rem * rem
-                n = n/10
+                num = num/10
             }
             return sum
         }
-        return true
+        return false
     }
 }
