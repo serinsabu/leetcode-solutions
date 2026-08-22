@@ -16,25 +16,22 @@
 class Solution {
     var maxSum = Int.min
     func maxPathSum(_ root: TreeNode?) -> Int {
-        if root == nil {
+        guard let root = root else {
             return 0
         }
         solve(root)
-        return maxSum 
+        return maxSum
     }
-
     func solve(_ node: TreeNode?) -> Int {
-        if node == nil {
+        // base case
+        guard let node = node else {
             return 0
         }
-        // Ask Left Child
-        var left = solve(node?.left)
-        // Ask Right Child
-        var right = solve(node?.right)
-        left = max(left, 0)
-        right = max(right, 0)
-        maxSum = max(maxSum, left+right+node!.val)
-        // Combine Left + Right + Current Node
-        return max(left,right)+node!.val
+
+        var left = max(0, solve(node.left))
+        var right = max(0, solve(node.right))
+
+        maxSum = max(maxSum, left + right + node.val)
+        return node.val + max(left,right)
     }
 }
