@@ -14,26 +14,25 @@
  * }
  */
 class Solution {
-    var maxDiameter = Int.min
+    
     func diameterOfBinaryTree(_ root: TreeNode?) -> Int {
-        if root == nil {
+        guard let root = root else {
             return 0
         }
-        solve(root)
-        return maxDiameter
+        var diameter = 0
+        solve(root, &diameter)
+        return diameter
     }
 
-    func solve(_ node: TreeNode?) -> Int {
-        // Base Case
-        if node == nil {
+    func solve(_ node: TreeNode?, _ diameter: inout Int) -> Int {
+        //var diameter = diameter
+        guard let node = node else {
             return 0
         }
-        // Ask Left Child
-        let left = solve(node?.left)
-        // Ask Right Child
-        let right = solve(node?.right)
-        // Combine Left + Right + Current Node
-        maxDiameter = max(maxDiameter, left+right)
-        return max(left,right)+1
+
+        var leftHeight = solve(node.left, &diameter)
+        var rightHeight = solve(node.right, &diameter)
+        diameter = max(diameter, leftHeight + rightHeight)
+        return 1 + max(leftHeight, rightHeight)
     }
 }
