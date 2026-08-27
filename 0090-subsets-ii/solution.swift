@@ -1,23 +1,26 @@
 class Solution {
     func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
-        var n = nums.count
-        var path = [Int]()
-        var result = [[Int]]()
-        var nums = nums
-        nums.sort()
+        let nums = nums.sorted()
+        var ans = [[Int]]()
+        var res = [Int]()
+        let n = nums.count
+
         solve(0)
 
         func solve(_ index: Int) {
-            result.append(path)
+            ans.append(res)
+
             for i in index..<n {
+                // if duplicate , skip
                 if i > index && nums[i] == nums[i-1] {
                     continue
                 }
-                path.append(nums[i])
+                
+                res.append(nums[i])
                 solve(i+1)
-                path.removeLast()
+                res.removeLast()
             }
         }
-        return result
+        return ans
     }
 }
