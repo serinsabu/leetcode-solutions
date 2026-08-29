@@ -14,30 +14,29 @@
  * }
  */
 class Solution {
-    // abs(left - right) <= 1
     func isBalanced(_ root: TreeNode?) -> Bool {
-        // Base Case
-        if root == nil {
+        guard let root = root else {
             return true
         }
-        return solve(root) == -1 ? false : true
+        return solve(root) != -1
     }
 
     func solve(_ node: TreeNode?) -> Int {
-        if node == nil {
+        guard let node = node else {
             return 0
         }
-        // Ask Left Child
-        let left = solve(node?.left)
-        // Ask Right Child
-        let right = solve(node?.right)
-        if left == -1 || right == -1 {
+
+        var leftHeight = solve(node.left)
+        var rightHeight = solve(node.right)
+
+        if leftHeight == -1 || rightHeight == -1 {
             return -1
         }
-        if abs(left - right) > 1 {
+
+        if abs(leftHeight - rightHeight) > 1 {
             return -1
         }
-        // Combine Left + Right + Current Node
-        return max(left,right)+1
+
+        return 1 + max(leftHeight, rightHeight)
     }
 }
