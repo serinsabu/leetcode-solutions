@@ -15,28 +15,34 @@
  */
 class Solution {
     func isBalanced(_ root: TreeNode?) -> Bool {
+        // node == nil is balanced
         guard let root = root else {
             return true
         }
-        return solve(root) != -1
+        let height = solve(root)
+        // balanced or unblanced
+        return height == -1 ? false : true
     }
-
+    
+    // return height
     func solve(_ node: TreeNode?) -> Int {
         guard let node = node else {
             return 0
         }
 
-        var leftHeight = solve(node.left)
-        var rightHeight = solve(node.right)
+        let left = solve(node.left)
+        let right = solve(node.right)
 
-        if leftHeight == -1 || rightHeight == -1 {
+        // unbalanced
+        if left == -1 || right == -1 {
             return -1
         }
 
-        if abs(leftHeight - rightHeight) > 1 {
+        // unbalanced
+        if abs(left-right) > 1 {
             return -1
         }
 
-        return 1 + max(leftHeight, rightHeight)
+        return 1 + max(left,right)
     }
 }
