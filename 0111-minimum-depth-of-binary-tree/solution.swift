@@ -18,23 +18,33 @@ class Solution {
         guard let root = root else {
             return 0
         }
-        return solve(root)
+        return height(root)
     }
-    // left and right should represent the minimum depth from that child down to a leaf, not simply the number of nodes in the entire subtree.
-    func solve(_ node: TreeNode?) -> Int {
+
+    func height(_ node: TreeNode?) -> Int {
         guard let node = node else {
             return 0
         }
-        var left = solve(node.left)
-        var right = solve(node.right)
-        // so this means we are adding root node + its left node because questions says path from the root node down to the nearest leaf node
-        // same for right
-        if left == 0 {
+
+        let left = height(node.left)
+        let right = height(node.right)
+
+        // no children
+        if node.left == nil && node.right == nil {
+            return 1
+        }
+
+        // only right child => current node + right
+        if node.left == nil {
             return 1 + right
         }
-        if right == 0 {
+
+        // only left child => current node + left
+        if node.right == nil {
             return 1 + left
         }
-        return 1 + min(left, right)
+
+        // both children
+        return 1 + min(left,right)
     }
 }
