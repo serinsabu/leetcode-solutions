@@ -14,25 +14,29 @@
  * }
  */
 class Solution {
-    
+    var diameter = 0
     func diameterOfBinaryTree(_ root: TreeNode?) -> Int {
         guard let root = root else {
             return 0
         }
-        var diameter = 0
-        solve(root, &diameter)
+        solve(root)
         return diameter
     }
 
-    func solve(_ node: TreeNode?, _ diameter: inout Int) -> Int {
-        //var diameter = diameter
+    func solve(_ node: TreeNode?) -> Int {
         guard let node = node else {
             return 0
         }
-
-        var leftHeight = solve(node.left, &diameter)
-        var rightHeight = solve(node.right, &diameter)
-        diameter = max(diameter, leftHeight + rightHeight)
-        return 1 + max(leftHeight, rightHeight)
+        // 1. Calculate the diameter passing through the current node → left + right
+        // 2. Keep track of the largest diameter found anywhere so far
+        let left = solve(node.left) // height of left
+        let right = solve(node.right) // height of right
+        // The path between two nodes through node 2 is: 4->2->5
+        // no of edges is diameter
+        // 4 ── 2 ── 5
+        //    ↑     ↑
+        //   edge   edge
+        diameter = max(diameter, left + right)
+        return 1 + max(left, right) // height
     }
 }
